@@ -1,0 +1,1 @@
+export const lambdaEatsRed = "#CF1020";

@@ -1,5 +1,8 @@
 import React from "react";
 import { createGlobalStyle } from 'styled-components'
+import { Navbar } from "./Navbar/Navbar";
+import { Banner } from "./Banner/Banner";
+import { Menu } from "./Menu/Menu";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -13,11 +16,10 @@ const GlobalStyle = createGlobalStyle`
 const App = () => {
   return (
     <>
-    <GlobalStyle/>
-    <div>
-      <h1>Lambda Eats</h1>
-      <p>You can remove this code and create your own header</p>
-      </div>
+      <GlobalStyle/>
+      <Navbar />
+      <Banner />
+      <Menu />
     </>
   );
 };
