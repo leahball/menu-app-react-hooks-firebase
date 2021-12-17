@@ -4,6 +4,8 @@ import OrderForm from "./Components/OrderForm";
 import HomePage from "./Components/HomePage";
 import axios from "axios";
 import { GlobalStyle } from "./Styles/GlobalStyle";
+import * as yup from "yup";
+import formSchema from "./Validation/formSchema";
 
 const initialFormValues = {
   userName: "",
@@ -25,7 +27,7 @@ const initialFormErrors = {
 const initialOrder = [];
 const initialDisabled = true;
 
-const App = () => {
+function App() {
   const [orders, setOrders] = useState([]);
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formErrors, setFormErrors] = useState(initialFormErrors);
@@ -40,7 +42,7 @@ const App = () => {
       .catch((err) => console.log(err));
   };
 
-  const postNewOrders = (newOrder) => {
+  const postNewOrder = (newOrder) => {
     axios
       .post("https://reqres.in/api/orders", newOrder)
       .then((res) => {
@@ -52,28 +54,71 @@ const App = () => {
       });
   };
 
+  const handleSubmit = () => {
+    const newOrder = {
+      username: formValues.name.trim(),
+      size: formValues.size,
+      toppings: [
+        "cheese",
+        "pepperoni",
+        "mushrooms",
+        "canadianBacon",
+        "pineapple",
+      ].filter((topping) => !!formValues[topping]),
+      special: formValues.special.trim(),
+    };
+    postNewOrder(newOrder);
+  };
+
+  const handleChange = (name, value) => {
+    validate(name, value);
+    setFormValues({ ...formValues, [name]: value });
+  };
+
+  const validate = (name, value) => {
+    yup
+      .reach(formSchema, name)
+      .validate(value)
+      .then(() => setFormErrors({ ...formErrors, [name]: "" }))
+      .catch((err) => setFormErrors({ ...formErrors, [name]: err.errors[0] }));
+  };
+
+  useEffect(() => {
+    getOrders();
+  }, []);
+
+  useEffect(() => {
+    formSchema.isValid(formValues).then((valid) => setDisabled(!valid));
+  }, [formValues]);
+
   return (
     <div className="App">
       <header>
         <h1>Lambda Eats</h1>
         <nav>
-          <Link to="/" id="order-pizza">
+          <Link to="/" id="pizza-form">
             Home
           </Link>
-          <Link to="/order-pizza" id="pizza-form">
+          <Link to="/order-pizza" id="order-pizza">
             Order Pizza
           </Link>
         </nav>
       </header>
       <GlobalStyle />
       <Route path="/order-pizza">
-        <OrderForm />
+        <OrderForm
+          values={formValues}
+          change={handleChange}
+          errors={formErrors}
+          submit={handleSubmit}
+          disabled={disabled}
+        />
       </Route>
       <Route exact path="/">
         <HomePage />
       </Route>
     </div>
   );
-};
+}
 
 export default App;
