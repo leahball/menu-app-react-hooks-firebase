@@ -8,7 +8,7 @@ import * as yup from "yup";
 import formSchema from "./Validation/formSchema";
 
 const initialFormValues = {
-  userName: "",
+  name: "",
   size: "",
   cheese: false,
   pepperoni: false,
@@ -19,8 +19,7 @@ const initialFormValues = {
 };
 
 const initialFormErrors = {
-  userName: "",
-  size: "",
+  name: "",
   special: "",
 };
 
@@ -49,19 +48,17 @@ function App() {
         setOrders([res.data, ...orders]);
       })
       .catch((err) => console.error(err))
-      .finally(() => {
-        setFormValues(initialFormValues);
-      });
+      .finally(() => setFormValues(initialFormValues));
   };
 
   const handleSubmit = () => {
     const newOrder = {
-      username: formValues.name.trim(),
+      name: formValues.name.trim(),
       size: formValues.size,
       toppings: [
         "cheese",
         "pepperoni",
-        "mushrooms",
+        "mushroom",
         "canadianBacon",
         "pineapple",
       ].filter((topping) => !!formValues[topping]),
@@ -84,10 +81,6 @@ function App() {
   };
 
   useEffect(() => {
-    getOrders();
-  }, []);
-
-  useEffect(() => {
     formSchema.isValid(formValues).then((valid) => setDisabled(!valid));
   }, [formValues]);
 
@@ -96,18 +89,18 @@ function App() {
       <header>
         <h1>Lambda Eats</h1>
         <nav>
-          <Link to="/" id="pizza-form">
+          <Link to="/" id="order-pizza">
             Home
           </Link>
-          <Link to="/order-pizza" id="order-pizza">
+          <Link to="/pizza" id="pizza-form">
             Order Pizza
           </Link>
         </nav>
       </header>
       <GlobalStyle />
-      <Route path="/order-pizza">
+      <Route path="/pizza">
         <OrderForm
-          values={formValues}
+          formValues={formValues}
           change={handleChange}
           errors={formErrors}
           submit={handleSubmit}
