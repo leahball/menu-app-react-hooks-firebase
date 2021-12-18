@@ -10,7 +10,7 @@ export const GlobalStyle = createGlobalStyle`
     justify-content: space-between;
     }
     nav {
-        width: 60%;
+        width: 70%;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
