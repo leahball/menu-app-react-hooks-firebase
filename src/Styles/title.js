@@ -1,5 +1,5 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Title = styled.div`
-    font-family: 'Righteous', cursive;
-`
+  font-family: "Exo 2", sans-serif;
+`;
